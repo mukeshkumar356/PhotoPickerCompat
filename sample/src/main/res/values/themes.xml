@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.Sample" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#6B1C27</item>
+        <item name="colorPrimaryDark">#4A1119</item>
+        <item name="colorAccent">#6B1C27</item>
+    </style>
+</resources>
