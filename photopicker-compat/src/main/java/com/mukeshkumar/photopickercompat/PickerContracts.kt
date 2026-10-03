@@ -61,6 +61,14 @@ internal class MultiPickerContract(
 
     override fun createIntent(context: Context, input: Pair<PickerMediaType, Int>): Intent {
         val (mediaType, maxItems) = input
+        // AndroidX's own PickMultipleVisualMedia throws IllegalArgumentException
+        // for maxItems <= 1, but only when it's actually constructed below - on
+        // the ACTION_OPEN_DOCUMENT fallback path that class is never touched, so
+        // an invalid maxItems would silently "work" (unlimited selection) on an
+        // old test device and then crash in production on a device with the
+        // real Photo Picker. Checking unconditionally, before branching, makes
+        // the behavior consistent across both paths instead of device-dependent.
+        require(maxItems >= 2) { "maxItems must be at least 2 (got $maxItems)." }
         return if (photoPickerAvailable) {
             val delegate = ActivityResultContracts.PickMultipleVisualMedia(maxItems)
             activeDelegate = delegate

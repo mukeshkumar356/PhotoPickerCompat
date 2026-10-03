@@ -65,4 +65,13 @@ class MultiPickerContractTest {
         val result = contract.parseResult(Activity.RESULT_CANCELED, null)
         assertTrue(result.isEmpty())
     }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun `createIntent rejects maxItems of 1 even on the fallback path`() {
+        // Before this guard, maxItems=1 "worked" here (fallback path ignores
+        // it) but crashed with IllegalArgumentException from AndroidX's
+        // PickMultipleVisualMedia on a device with the real Photo Picker -
+        // this test pins the fallback path to the same, consistent behavior.
+        contract.createIntent(context, PickerMediaType.IMAGE_ONLY to 1)
+    }
 }

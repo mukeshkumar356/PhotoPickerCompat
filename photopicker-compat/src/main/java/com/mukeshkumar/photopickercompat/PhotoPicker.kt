@@ -83,6 +83,10 @@ class MultiPhotoPicker private constructor(
     /**
      * Opens the picker. [maxItems] is only enforced by the real Photo Picker —
      * see the class doc on [MultiPickerContract] for the fallback behavior.
+     *
+     * @throws IllegalArgumentException if [maxItems] is less than 2 — see
+     * [MultiPickerContract] for why. Use [PhotoPicker] instead for
+     * single-item selection.
      */
     fun launch(mediaType: PickerMediaType = PickerMediaType.IMAGE_ONLY, maxItems: Int = 5) {
         launcher.launch(mediaType to maxItems)
