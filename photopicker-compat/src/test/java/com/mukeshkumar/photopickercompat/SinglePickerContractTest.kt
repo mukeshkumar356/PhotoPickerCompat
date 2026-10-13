@@ -46,6 +46,15 @@ class SinglePickerContractTest {
     }
 
     @Test
+    fun `fallback intent for image and video restricts mime types to media`() {
+        val intent = contract.createIntent(context, PickerMediaType.IMAGE_AND_VIDEO)
+        assertEquals(
+            listOf("image/*", "video/*"),
+            intent.getStringArrayExtra(Intent.EXTRA_MIME_TYPES)?.toList()
+        )
+    }
+
+    @Test
     fun `fallback intent is single-select, no EXTRA_ALLOW_MULTIPLE`() {
         val intent = contract.createIntent(context, PickerMediaType.IMAGE_ONLY)
         assertTrue(!intent.hasExtra(Intent.EXTRA_ALLOW_MULTIPLE))

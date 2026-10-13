@@ -103,5 +103,10 @@ private fun fallbackIntent(mediaType: PickerMediaType, allowMultiple: Boolean): 
     Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
         addCategory(Intent.CATEGORY_OPENABLE)
         type = mediaType.mimeType
+        // "*/*" alone would let the user pick any file (PDFs, APKs, ...) on the
+        // fallback path, unlike the real Photo Picker. Restrict it to media.
+        if (mediaType == PickerMediaType.IMAGE_AND_VIDEO) {
+            putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
+        }
         if (allowMultiple) putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
     }
