@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
@@ -70,7 +72,16 @@ internal class MultiPickerContract(
         // the behavior consistent across both paths instead of device-dependent.
         require(maxItems >= 2) { "maxItems must be at least 2 (got $maxItems)." }
         return if (photoPickerAvailable) {
-            val delegate = ActivityResultContracts.PickMultipleVisualMedia(maxItems)
+            // The platform picker rejects maxItems above MediaStore.getPickImagesMaxLimit()
+            // with an IllegalArgumentException from AndroidX, while the fallback path
+            // accepts any value. Clamp so a large maxItems means "as many as allowed"
+            // on every device instead of crashing on the newest ones.
+            val limit = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                MediaStore.getPickImagesMaxLimit()
+            } else {
+                Int.MAX_VALUE
+            }
+            val delegate = ActivityResultContracts.PickMultipleVisualMedia(maxItems.coerceAtMost(limit))
             activeDelegate = delegate
             delegate.createIntent(
                 context,
