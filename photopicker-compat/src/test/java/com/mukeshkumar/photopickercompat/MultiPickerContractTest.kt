@@ -51,6 +51,19 @@ class MultiPickerContractTest {
     }
 
     @Test
+    fun `parseResult skips clipData items that have no uri`() {
+        val uri = Uri.parse("content://media/external/images/1")
+        val clipData = ClipData.newRawUri("selected", uri).apply {
+            addItem(ClipData.Item("just text"))
+        }
+        val resultIntent = Intent().apply { this.clipData = clipData }
+
+        val result = contract.parseResult(Activity.RESULT_OK, resultIntent)
+
+        assertEquals(listOf(uri), result)
+    }
+
+    @Test
     fun `parseResult falls back to single data uri when there is no clipData`() {
         val uri = Uri.parse("content://media/external/images/7")
         val resultIntent = Intent().setData(uri)

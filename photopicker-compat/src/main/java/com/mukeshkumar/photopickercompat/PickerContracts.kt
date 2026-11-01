@@ -103,7 +103,9 @@ internal class MultiPickerContract(
         if (resultCode != Activity.RESULT_OK || intent == null) return emptyList()
         val clipData = intent.clipData
         return if (clipData != null) {
-            (0 until clipData.itemCount).map { clipData.getItemAt(it).uri }
+            // ClipData.Item.getUri() is null for text/intent items; drop those so the
+            // declared List<Uri> never contains a null that NPEs in the caller.
+            (0 until clipData.itemCount).mapNotNull { clipData.getItemAt(it).uri }
         } else {
             intent.data?.let { listOf(it) } ?: emptyList()
         }
