@@ -36,8 +36,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         multiPicker = MultiPhotoPicker.register(this, this) { uris ->
-            imagePreview.setImageURI(uris.firstOrNull())
-            statusText.text = "Picked ${uris.size} item(s)"
+            // An empty list means the user backed out; keep the previous preview
+            // instead of blanking it, and report it the same way the single picker does.
+            if (uris.isNotEmpty()) {
+                imagePreview.setImageURI(uris.first())
+                statusText.text = "Picked ${uris.size} item(s)"
+            } else {
+                statusText.text = "Selection cancelled"
+            }
         }
 
         findViewById<Button>(R.id.pickSingleButton).setOnClickListener {
