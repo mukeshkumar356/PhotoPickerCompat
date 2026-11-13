@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">PhotoPickerCompat Sample</string>
+    <string name="preview_description">Picked image preview</string>
+    <string name="status_no_selection">No image selected</string>
+    <string name="status_cancelled">Selection cancelled</string>
+    <string name="status_picked_single">Picked: %1$s</string>
+    <plurals name="status_picked_multiple">
+        <item quantity="one">Picked %1$d item</item>
+        <item quantity="other">Picked %1$d items</item>
+    </plurals>
+    <string name="pick_single">Pick one photo</string>
+    <string name="pick_multiple">Pick up to 5 photos</string>
 </resources>

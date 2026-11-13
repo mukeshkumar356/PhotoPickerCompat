@@ -29,9 +29,9 @@ class MainActivity : AppCompatActivity() {
         singlePicker = PhotoPicker.register(this, this) { uri ->
             if (uri != null) {
                 imagePreview.setImageURI(uri)
-                statusText.text = "Picked: $uri"
+                statusText.text = getString(R.string.status_picked_single, uri.toString())
             } else {
-                statusText.text = "Selection cancelled"
+                statusText.setText(R.string.status_cancelled)
             }
         }
 
@@ -40,9 +40,11 @@ class MainActivity : AppCompatActivity() {
             // instead of blanking it, and report it the same way the single picker does.
             if (uris.isNotEmpty()) {
                 imagePreview.setImageURI(uris.first())
-                statusText.text = "Picked ${uris.size} item(s)"
+                statusText.text = resources.getQuantityString(
+                    R.plurals.status_picked_multiple, uris.size, uris.size
+                )
             } else {
-                statusText.text = "Selection cancelled"
+                statusText.setText(R.string.status_cancelled)
             }
         }
 
